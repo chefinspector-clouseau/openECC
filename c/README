@@ -1,0 +1,11 @@
+File structure:
+
+gf/	core routines to compute in a finite field GF(2^n)
+rs/	Reed-Solomon encoder + decoder
+test/	test code, also useful as application example
+./	user configuration file ecc_cfg.h, specifying the code parameters,
+	including the size of the finite field.
+
+Code parameters are set at compile time.
+
+Tab width is 4 (shoot me...)

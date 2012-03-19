@@ -1,0 +1,6 @@
+#!/bin/sh
+
+make -C test clean
+make -C test DEBUG_TEST=1 TEST_RUNS=2 test_rs
+test/test_rs
+echo $?
