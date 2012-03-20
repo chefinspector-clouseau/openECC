@@ -34,6 +34,8 @@
  #include "gf10.c"
 #elif (GF_N == 2048)
  #include "gf11.c"
+#elif (GF_N == 4096)
+ #include "gf12.c"
 #else
  #error "Field size not supported."
 #endif
