@@ -23,6 +23,8 @@ int main ()
 	// a*(b*c) = (a*b)*c
 	// a*c + b*c = (a+b)*c
 	// a*(b/a) = b (if a != 0)
+	gfInit();
+
 	for (int a=0; a<GF_N; a++) {
 		for (int b=0; b<GF_N; b++) {
 			if (gfAdd(a, b) != gfAdd(b, a))

@@ -35,6 +35,8 @@ void rsInit()
 {
 	dprintf("---------- rsInit\n");
 
+	gfInit();
+
 	// ---------- compute rsSup = X^m - 1 (only upper n-k coeffs)
 	rsSup[RS_N_K - 1] = GF_1;
 	for (int i=RS_N_K - 2; i>=0; i--)

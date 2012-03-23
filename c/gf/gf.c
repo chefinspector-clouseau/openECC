@@ -15,30 +15,60 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
-// include lookup tables for our field size:
-#if (GF_N == 8)
- #include "gf3.c"
-#elif (GF_N == 16)
- #include "gf4.c"
-#elif (GF_N == 32)
- #include "gf5.c"
-#elif (GF_N == 64)
- #include "gf6.c"
-#elif (GF_N == 128)
- #include "gf7.c"
-#elif (GF_N == 256)
- #include "gf8.c"
-#elif (GF_N == 512)
- #include "gf9.c"
-#elif (GF_N == 1024)
- #include "gf10.c"
-#elif (GF_N == 2048)
- #include "gf11.c"
-#elif (GF_N == 4096)
- #include "gf12.c"
-#else
- #error "Field size not supported."
-#endif
+gfVec gfE2V[GF_N];
+gfExp gfV2E[GF_N];
+
+// -----------------------------------------------------------------------------
+// initialize LUTs gfExp <-> gfVec
+// -----------------------------------------------------------------------------
+int gfInit()
+{
+	// without X^n, X^(n-1) at bit 0
+	#if (GF_N == 8)
+		#define GFPOL 0x6	//                 110 (1): (x^3) + x + 1
+	#elif (GF_N == 16)
+		#define GFPOL 0xc	//                1100 (1): (x^4) + x + 1
+	#elif (GF_N == 32)
+		#define GFPOL 0x14	//              1 0100 (1): (x^5) + x^2 + 1
+	#elif (GF_N == 64)
+		#define GFPOL 0x30	//             11 0000 (1): (x^6) + x + 1
+	#elif (GF_N == 128)
+		#define GFPOL 0x44	//            100 0100 (1): (x^7) + x^4 + 1
+	#elif (GF_N == 256)
+		#define GFPOL 0xb8	//           1011 1000 (1): (x^8) + x^4 + x^3 + x^2 + 1
+	#elif (GF_N == 512)
+		#define GFPOL 0x110	//         1 0001 0000 (1): (x^9) + x^4 + 1
+	#elif (GF_N == 1024)
+		#define GFPOL 0x240	//        10 0100 0000 (1): (x^10) + x^3 + 1
+	#elif (GF_N == 2048)
+		#define GFPOL 0x500	//       101 0000 0000 (1): (x^11) + x^2 + 1
+	#elif (GF_N == 4096)
+		#define GFPOL 0xca0	//      1100 1010 0000 (1): (x^12) + x^6 + x^4 + x + 1
+	#elif (GF_N == 8192)
+		#define GFPOL 0x1b00//    1 1011 0000 0000 (1): (x^13) + x^4 + x^3 + x + 1
+	#elif (GF_N == 16384)
+		#define GFPOL 0x3500//   11 0101 0000 0000 (1): (x^14) + x^5 + x^3 + x + 1
+	#elif (GF_N == 32768)
+		#define GFPOL 0x6000//  110 0000 0000 0000 (1): (x^15) + x + 1
+	#elif (GF_N == 65536)
+		#define GFPOL 0xb400// 1011 0100 0000 0000 (1): (x^16) + x^5 + x^3 + x^2 + 1
+	#else
+	 #error "Field size not supported."
+	#endif
+
+	gfE2V[0] = 0;
+	gfV2E[0] = 0;
+	gfVec v = GF_N >> 1;
+	for (gfExp e=0; e<GF_N-1; e++) {	// z^e, represented as e+1
+		int c = v & 1;
+		v >>= 1;
+		if (c)
+			v ^= GFPOL;
+		gfE2V[e+1] = v;
+		gfV2E[v] = e+1;
+	}
+}
+
 
 // -----------------------------------------------------------------------------
 // compute S = A + B; return actual deg(S)
