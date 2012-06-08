@@ -15,7 +15,7 @@
 
 // return random int in [min, max]
 // -----------------------------------------------------------------------------
-unsigned int rand(unsigned int min, unsigned int max);
+unsigned int randInt(unsigned int min, unsigned int max);
 
 
 // return random element of GF

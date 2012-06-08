@@ -11,12 +11,15 @@
 #include "test_util.h"
 #include <rs/rs.h>
 #include <gf/gf.h>
-
+#include <stdlib.h>	// atoi
 
 // encode, add error, decode.
 // return 0 for success
 // -----------------------------------------------------------------------------
-int rsTest()
+int rsTest(
+	int nErrs,	// number of errors to inject
+	int nEnc,	// encode # times (for speed test)
+	int nDec)	// decode # times
 // -----------------------------------------------------------------------------
 {
 	static gfExp C[RS_N];		// code word
@@ -34,38 +37,38 @@ int rsTest()
 	PRINTPOL("RS:  A", A, RS_K - 1);
 
 	// ---------- encode: ----------
-	//for (int test=0; test<100000; test++)	// speed test
-	rsEncode(A, R);
+	for (int i=0; i<nEnc; i++)	// speed test
+		rsEncode(A, R);
 	// copy R back into C:
 	for (int i=0; i<RS_N_K; i++)
 		C[i] = R[i];
 	PRINTPOL("RS:  C", C, RS_N - 1);
 
-	// ---------- add error: ----------
+	// ---------- pick error: ----------
 	static gfExp EV[RS_N];		// error vector
 	for (int i=0; i<RS_N; i++)
 		EV[i] = GF_0;
-	int nErrs = rand(0, RS_N_K / 2);
-	//int nErrs = RS_N_K / 2;
-	//int nErrs = 1;
 	dprintf("RS: nErrs = %d\n", nErrs);
 	for (int i=0; i<nErrs; i++) {
 		int loc;	// find not-yet-used error location
 		do {
-			loc = rand(0, RS_N - 1);
+			loc = randInt(0, RS_N - 1);
 		} while (EV[loc] != GF_0);	// already used -> try again
 		int value = randE1();		// error must be non-zero
 		EV[loc] = value;
 		//dprintf("RS: EV[%d] = %d\n", loc, value);
 	}
 	PRINTPOL("RS: EV", EV, RS_N - 1);
+
+	// ---------- add error: ----------
 	gfPolAdd(C, RS_N - 1, EV, RS_N - 1, C2);
 	PRINTPOL("RS: C2", C2, RS_N - 1);
 
 	// ---------- decode: ----------
-	static gfExp A2[RS_K];				// decoded information
-	//for (int test=0; test<100000; test++)	// speed test
-	rsDecode(C2, A2);
+	static gfExp A2[RS_K];					// corrected user data
+	for (int i=0; i<nDec; i++) {			// speed test
+		rsDecode(C2, A2);
+	}
 	PRINTPOL("RS: A2", A2, RS_K - 1);
 
 	// ---------- verify: ----------
@@ -84,13 +87,23 @@ int rsTest()
 #endif
 
 // -----------------------------------------------------------------------------
-int main()
+int main(int argc, char *argv[])
 // -----------------------------------------------------------------------------
 {
+	// arg parsing:
+	argc--; argv++;
+	// defaults:
+	int nErrs = RS_N_K/2;
+	int nEnc = 1;
+	int nDec = 1;
+	if (argc-- > 0) nErrs = atoi(*(argv++));
+	if (argc-- > 0) nEnc  = atoi(*(argv++));
+	if (argc-- > 0) nDec  = atoi(*(argv++));
+
 	rsInit();
 
 	for (int test=0; test<TEST_RUNS; test++) {
-		if (rsTest())
+		if (rsTest(nErrs, nEnc, nDec))
 			return 1;
 	}
 	return 0;

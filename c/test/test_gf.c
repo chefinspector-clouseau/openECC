@@ -70,8 +70,8 @@ int main ()
 // 		// 	A[i] = B[i] = Q[i] = R[i] = Z[i] = 0;
 // 		// R[-1] = 0;
 
-// 		nB = rand(0, M);
-// 		nA = rand(nB, M);
+// 		nB = randInt(0, M);
+// 		nA = randInt(nB, M);
 // 		randPol(A, nA);
 // 		randPol(B, nB);
 // 		if (gfPolDeg(B, nB) == -1)		// avoid dividing by B=0
@@ -87,8 +87,8 @@ int main ()
 
 // 	// -------------------- test gfPolEEA(): --------------------
 // 	for (int test=0; test<100000; test++) {
-// 		nN = rand(1, M);
-// 		nA = rand(0, nN-1);
+// 		nN = randInt(1, M);
+// 		nA = randInt(0, nN-1);
 // 		randPol(A, nA);
 // 		randPol(N, nN);
 // 		if (gfPolDeg(A, nA) == -1)		// avoid dividing by A=0
@@ -102,8 +102,8 @@ int main ()
 
 	// -------------------- test gfPolEvalSeq() against gfPolEval(): --------------------
 	for (int test=0; test<10000; test++) {
-		nA = rand(0, GF_N - 2);	// limit of gfPolEvalSeq()
-		nY = rand(0, M);
+		nA = randInt(0, GF_N - 2);	// limit of gfPolEvalSeq()
+		nY = randInt(0, M);
 		gfVec* Yv = Y;
 		randPol(A, nA);
 		gfExp x = GF_Z(1);//randE1();
