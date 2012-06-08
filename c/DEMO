@@ -1,6 +1,9 @@
 #!/bin/sh
 
+set -e
 make -C test clean
 make -C test DEBUG_TEST=1 TEST_RUNS=2 test_rs
+
+set +e
 test/test_rs
 echo $?
