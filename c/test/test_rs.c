@@ -29,6 +29,7 @@ int rsTest(
 	gfExp* R = R_ + 1;			// encoder needs R[-1]
 
 	static gfExp C2[RS_N];		// code word with errors
+	static gfExp C3[RS_N];		// code word with errors, used in loop
 
 	dprintf("RS: --------------------\n");
 
@@ -63,12 +64,15 @@ int rsTest(
 	// ---------- add error: ----------
 	gfPolAdd(C, RS_N - 1, EV, RS_N - 1, C2);
 	PRINTPOL("RS: C2", C2, RS_N - 1);
-
-	// ---------- decode: ----------
-	static gfExp A2[RS_K];					// corrected user data
 	for (int i=0; i<nDec; i++) {			// speed test
-		rsDecode(C2, A2);
+		// restore erroneous code word (should not be part of the speed test but
+		// required here):
+		for (int k=0; k<RS_N; k++)
+			C3[k] = C2[k];
+		// ---------- decode + correct: ----------
+		rsDecode(C3);
 	}
+	gfExp* A2 = C3 + RS_N_K;				// corrected user data
 	PRINTPOL("RS: A2", A2, RS_K - 1);
 
 	// ---------- verify: ----------

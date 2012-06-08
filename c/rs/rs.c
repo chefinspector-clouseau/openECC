@@ -99,11 +99,11 @@ void rsEncode(
 }
 
 
-// Compute information word from code word, correcting up to n-k/2 errors.
+// Compute information word from code word, correcting up to (n-k)/2 errors.
 // -----------------------------------------------------------------------------
 void rsDecode(
-	gfExp* C,	// in: codeword     C[n-1] ... C[n-k] C[n-k-1] ... C[0]
-	gfExp* A)	// out: info word   A[k-1] ... A[0]
+	gfExp* C)	// inout: codeword  C[n-1] ... C[n-k] C[n-k-1] ... C[0]
+				// = info word      A[k-1] ... A[0]
 // -----------------------------------------------------------------------------
 {
 	dprintf("---------- rsDecode\n");
@@ -159,7 +159,5 @@ void rsDecode(
 			}
 		}
 	}
-	for (int i=0; i<RS_K; i++)
-		A[i] = C[i + RS_N_K];
-	PRINTPOL("dec: A", A, RS_K - 1);
+	PRINTPOL("dec: A", C, RS_K - 1);
 }
