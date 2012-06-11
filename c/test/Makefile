@@ -36,7 +36,14 @@ default : test_rs
 
 .PHONY: FORCE
 
-RS-OBJ = ../rs/rs.o
+ifeq ($(CODEC), linux)
+  DEFS += -DGF_TYPE_SHORT
+  RS-OBJ = ../linux/rs-linux.o ../linux/reed_solomon.o
+  ../linux/rs-linux.o: FORCE
+	$(MAKE) -C ../linux $(RS-OBJ)
+else
+  RS-OBJ = ../rs/rs.o
+endif
 
 export DEFS
 
@@ -62,6 +69,7 @@ test: test_rs FORCE
 clean:
 	$(MAKE) -s -C ../gf clean
 	$(MAKE) -s -C ../rs clean
+	$(MAKE) -s -C ../linux clean
 	rm -f test_gf
 	rm -f test_rs
 	rm -f *.o
