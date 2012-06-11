@@ -8,10 +8,15 @@
 // published by the Free Software Foundation.
 // -----------------------------------------------------------------------------
 
-#include "test_util.h"
-#include <rs/rs.h>
-#include <gf/gf.h>
-#include <stdlib.h>	// atoi
+#include "test_util.h"		// random + compare functions
+#include <rs/rs.h>			// rsEncode() / rsDecode()
+#include <gf/gf.h>			// gfExp type
+#include <stdlib.h>			// atoi (cmdline parsing)
+
+#ifndef DEBUG_TEST			// disable debug output for this file
+  #define printf
+  #define printPol
+#endif
 
 // encode, add error, decode.
 // return 0 for success
@@ -31,11 +36,11 @@ int rsTest(
 	static gfExp C2[RS_N];		// code word with errors
 	static gfExp C3[RS_N];		// code word with errors, used in loop
 
-	dprintf("RS: --------------------\n");
+	printf("RS: --------------------\n");
 
 	// ---------- random info word: ----------
 	randPol(A, RS_K - 1);
-	PRINTPOL("RS:  A", A, RS_K - 1);
+	printPol("RS:  A", A, RS_K - 1);
 
 	// ---------- encode: ----------
 	for (int i=0; i<nEnc; i++)	// speed test
@@ -43,13 +48,13 @@ int rsTest(
 	// copy R back into C:
 	for (int i=0; i<RS_N_K; i++)
 		C[i] = R[i];
-	PRINTPOL("RS:  C", C, RS_N - 1);
+	printPol("RS:  C", C, RS_N - 1);
 
 	// ---------- pick error: ----------
 	static gfExp EV[RS_N];		// error vector
 	for (int i=0; i<RS_N; i++)
 		EV[i] = GF_0;
-	dprintf("RS: nErrs = %d\n", nErrs);
+	printf("RS: nErrs = %d\n", nErrs);
 	for (int i=0; i<nErrs; i++) {
 		int loc;	// find not-yet-used error location
 		do {
@@ -57,13 +62,13 @@ int rsTest(
 		} while (EV[loc] != GF_0);	// already used -> try again
 		int value = randE1();		// error must be non-zero
 		EV[loc] = value;
-		//dprintf("RS: EV[%d] = %d\n", loc, value);
+		//printf("RS: EV[%d] = %d\n", loc, value);
 	}
-	PRINTPOL("RS: EV", EV, RS_N - 1);
+	printPol("RS: EV", EV, RS_N - 1);
 
 	// ---------- add error: ----------
 	gfPolAdd(C, RS_N - 1, EV, RS_N - 1, C2);
-	PRINTPOL("RS: C2", C2, RS_N - 1);
+	printPol("RS: C2", C2, RS_N - 1);
 	for (int i=0; i<nDec; i++) {			// speed test
 		// restore erroneous code word (should not be part of the speed test but
 		// required here):
@@ -73,22 +78,18 @@ int rsTest(
 		rsDecode(C3);
 	}
 	gfExp* A2 = C3 + RS_N_K;				// corrected user data
-	PRINTPOL("RS: A2", A2, RS_K - 1);
+	printPol("RS: A2", A2, RS_K - 1);
 
 	// ---------- verify: ----------
 	if (! polCmp(A, A2, RS_K - 1, RS_K - 1))
 	{
-		PRINTPOL("RS: A ", A,  RS_K - 1);
-		PRINTPOL("RS: A2", A2, RS_K - 1);
+		printPol("RS: A ", A,  RS_K - 1);
+		printPol("RS: A2", A2, RS_K - 1);
 		return 1;
 	}
 	return 0;
 }
 
-
-#ifndef TEST_RUNS
-  #define TEST_RUNS 1	// demo only
-#endif
 
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
@@ -97,18 +98,29 @@ int main(int argc, char *argv[])
 	// arg parsing:
 	argc--; argv++;
 	// defaults:
-	int nErrs = RS_N_K/2;
-	int nEnc = 1;
-	int nDec = 1;
+	int nRuns = 1;			// # of test runs
+	int nErrs = RS_N_K/2;	// # of errors to inject (-1 for random [0..max])
+	int seed  = 1;			// random seed
+	int nEnc  = 1;			// encode # times (speed test)
+	int nDec  = 1;			// decode # times (speed test)
+	if (argc-- > 0) nRuns = atoi(*(argv++));
 	if (argc-- > 0) nErrs = atoi(*(argv++));
+	if (argc-- > 0) seed  = atoi(*(argv++));
 	if (argc-- > 0) nEnc  = atoi(*(argv++));
 	if (argc-- > 0) nDec  = atoi(*(argv++));
 
+	randSetSeed(seed);
+
 	rsInit();
 
-	for (int test=0; test<TEST_RUNS; test++) {
-		if (rsTest(nErrs, nEnc, nDec))
-			return 1;
+	for (int run = 0; run < nRuns; run++) {
+		int nErrs2;
+		if (nErrs >= 0)
+			nErrs2 = nErrs;
+		else								// random # of errors
+			nErrs2 = randInt(0, RS_N_K/2);
+		if (rsTest(nErrs2, nEnc, nDec))
+			return 1;						// abort on error
 	}
 	return 0;
 }

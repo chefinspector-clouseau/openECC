@@ -12,6 +12,11 @@
 
 #include "rs.h"
 
+#ifndef DEBUG_RS		// disable debug output for this file
+  #define printf
+  #define printPol
+#endif
+
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
@@ -33,7 +38,7 @@ static gfExp rsSup[RS_N_K];
 void rsInit()
 // -----------------------------------------------------------------------------
 {
-	dprintf("---------- rsInit\n");
+	printf("---------- rsInit\n");
 
 	gfInit();
 
@@ -63,14 +68,14 @@ void rsInit()
 		// an optimization in gfPolDiv1() requires (rsGen[i] != 0 for all i)
 		// -> check here
 		if (D1[i] == GF_0) {
-			dprintf("!! BAD CONFIG: generator polynomial has 0-coefficient !!\n");
+			printf("!! BAD CONFIG: generator polynomial has 0-coefficient !!\n");
 			rsGen[0] = 1 / rsSup[0];	// throw DBZ-exception (trying to fool compiler)
 		}
 		rsGen[i] = D1[i];
 	}
 
-	PRINTPOL("ini: rsSup", rsSup, RS_N_K - 1);
-	PRINTPOL("ini: rsGen", rsGen, RS_N_K);
+	printPol("ini: rsSup", rsSup, RS_N_K - 1);
+	printPol("ini: rsGen", rsGen, RS_N_K);
 }
 
 
@@ -87,15 +92,15 @@ void rsEncode(
 				// !! <-- user part -->   <---- abused  ---->
 // -----------------------------------------------------------------------------
 {
-	dprintf("---------- rsEncode\n");
-	PRINTPOL("enc: A", A, RS_K - 1);
+	printf("---------- rsEncode\n");
+	printPol("enc: A", A, RS_K - 1);
 	gfExp* XA = A - RS_N_K;				// X^(n-k) * A(X)
 	// clear XA[0] .. XA[n-k-1]:
 	for (int i=0; i<RS_N_K; i++)
 		XA[i] = GF_0;
 	gfPolDiv1(XA, RS_N - 1, rsGen, RS_N_K, R);
-	PRINTPOL("enc: A", A, RS_K - 1);
-	PRINTPOL("enc: R", R, RS_N_K - 1);
+	printPol("enc: A", A, RS_K - 1);
+	printPol("enc: R", R, RS_N_K - 1);
 }
 
 
@@ -106,12 +111,12 @@ void rsDecode(
 				// = info word      A[k-1] ... A[0]
 // -----------------------------------------------------------------------------
 {
-	dprintf("---------- rsDecode\n");
-	PRINTPOL("dec: C", C, RS_N - 1);
+	printf("---------- rsDecode\n");
+	printPol("dec: C", C, RS_N - 1);
 	static gfVec Sv[RS_N_K];	// syndrome in vector representation
 	// calculate syndrome using the DFT:
 	gfPolEvalSeq(C, RS_N - 1, Sv, RS_N_K - 1, GF_Z(1));
-	PRINTPOL("dec: Sv", Sv, RS_N_K - 1);
+	printPol("dec: Sv", Sv, RS_N_K - 1);
 	#define MSIZE1 (7 * (RS_N_K + 1) + 3)	// for the EEA
 	#define MSIZE2 (RS_K)					// to evaluate Q(X) at K locations
 	static gfExp M[MAX(MSIZE1, MSIZE2)];	// memory
@@ -155,9 +160,9 @@ void rsDecode(
 				gfExp qx = gfPolEvalDeriv(Q, nQ, x);
 				gfExp e = gfDiv1(gfMul11(px, nx), qx);
 				C[i] = gfSub(C[i], e);
-				dprintf("Q(%d) = 0 => error E(%d)=%d; new C[%d]=%d\n", x, i, e, i, C[i]);
+				printf("Q(%d) = 0 => error E(%d)=%d; new C[%d]=%d\n", x, i, e, i, C[i]);
 			}
 		}
 	}
-	PRINTPOL("dec: A", C, RS_K - 1);
+	printPol("dec: A", C, RS_K - 1);
 }

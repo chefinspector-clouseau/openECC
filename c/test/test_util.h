@@ -13,6 +13,11 @@
 
 #include <gf/gf.h>
 
+// set random seed
+// -----------------------------------------------------------------------------
+void randSetSeed(unsigned int seed);
+
+
 // return random int in [min, max]
 // -----------------------------------------------------------------------------
 unsigned int randInt(unsigned int min, unsigned int max);

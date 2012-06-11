@@ -14,6 +14,7 @@
 #define _GF_H
 
 #include <ecc_cfg.h>	// needed for GF_N = 2^n (field size)
+#include <stdio.h>		// for printf debugging
 
 #ifndef GF_N
   #warning "Unspecified field size, using default: 16."
@@ -48,32 +49,17 @@
 //	z^(-(m-1)) = z^1	2					GF__Z(-(m-1))
 
 
-typedef int   gfExp;	// exponent representation
-typedef gfExp gfVec;	// vector representation
+#if defined(GF_TYPE_SHORT)
+ typedef short int gfExp;	// exponent representation
+#else						// default: native int
+ typedef int gfExp;			// exponent representation
+#endif
+typedef gfExp gfVec;		// vector representation
 
 // lookup tables to convert between both representations:
 extern gfVec gfE2V[GF_N];	// z^i -> vector
 extern gfExp gfV2E[GF_N];	// vector -> z^i
 // extern gfExp zechLog[GF_N];	// was used by gfAdd() but turned out to be slower
-
-
-// -----------------------------------------------------------------------------
-// enable/disable basic printf debugging:
-// -----------------------------------------------------------------------------
-#ifdef DEBUG
-  #include <stdio.h>
-  #define PRINTPOL(name, p, n) { \
-	printf(name "[%3d] = { ", n); \
-	for (int i=n; i>=0; i--) { \
-		printf("%3d ", p[i]); \
-	} \
-	printf("}\n"); \
- }
-  #define dprintf printf
-#else
-  #define dprintf
-  #define PRINTPOL
-#endif
 
 
 // =============================================================================
@@ -90,7 +76,7 @@ extern gfExp gfV2E[GF_N];	// vector -> z^i
 inline gfExp GF_Z(int i)
 // -----------------------------------------------------------------------------
 {
-  #ifdef DEBUG
+  #ifdef DEBUG_GF
 	// sanity checks
 	if (i >= GF_N - 1)
 		printf("ERROR: GF_Z: %d >= GF_N-1 !!\n", i);
@@ -104,7 +90,7 @@ inline gfExp GF_Z(int i)
 inline gfExp GF__Z(int i)
 // -----------------------------------------------------------------------------
 {
-  #ifdef DEBUG
+  #ifdef DEBUG_GF
 	// sanity checks
 	if (i < -GF_N + 1)
 		printf("ERROR: GF__Z: %d < -GF_N+1 !!\n", i);
@@ -119,7 +105,7 @@ inline gfExp GF__Z(int i)
 inline gfExp gfMul11(gfExp a, gfExp b)
 // -----------------------------------------------------------------------------
 {
-  #ifdef DEBUG
+  #ifdef DEBUG_GF
 	// sanity checks
 	if (a == GF_0)
 		printf("ERROR: gfMul11: a=0 !!\n");
@@ -160,7 +146,7 @@ inline gfExp gfMul(gfExp a, gfExp b)
 inline gfExp gfDiv1(gfExp a, gfExp b)
 // -----------------------------------------------------------------------------
 {
-  #ifdef DEBUG
+  #ifdef DEBUG_GF
 	// sanity checks
 	if (a == GF_0)
 		printf("ERROR: gfDiv1: a=0 !!\n");
@@ -180,7 +166,7 @@ inline gfExp gfDiv1(gfExp a, gfExp b)
 inline gfExp gfInv1(gfExp a)
 // -----------------------------------------------------------------------------
 {
-  #ifdef DEBUG
+  #ifdef DEBUG_GF
 	// sanity checks
 	if (a == GF_0)
 		printf("ERROR: gfInv1: a=0 (division by zero) !!\n");
@@ -370,5 +356,14 @@ gfExp gfPolEvalDeriv(
 	gfExp*	A,	// polynomial
 	int		nA,	// max. deg(A)
 	gfExp	x);	// location
+
+
+// -----------------------------------------------------------------------------
+// printf debugging:
+// -----------------------------------------------------------------------------
+void printPol(
+	char* name,		// printed as prefix
+	gfExp* p,		// polynomial
+	int n);			// degree (-> prints n+1 coeffs)
 
 #endif	// _GF_H

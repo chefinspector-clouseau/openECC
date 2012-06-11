@@ -10,15 +10,22 @@
 
 #include "test_util.h"
 
-unsigned int seed = 1;
+unsigned int SEED = 1;
+
+// set random seed
+// -----------------------------------------------------------------------------
+void randSetSeed(unsigned int seed)
+{
+	SEED = seed;
+}
 
 // return random int in [min, max]
 // -----------------------------------------------------------------------------
 unsigned int randInt(unsigned int min, unsigned int max)
 // -----------------------------------------------------------------------------
 {
-	seed = (1099087573 * seed) & 0xffffffff;
-	return min + ((seed>>8) % (max - min + 1));
+	SEED = (1099087573 * SEED) & 0xffffffff;
+	return min + ((SEED>>8) % (max - min + 1));
 }
 
 // return random element of GF:

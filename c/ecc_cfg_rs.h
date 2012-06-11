@@ -10,7 +10,9 @@
 // -----------------------------------------------------------------------------
 
 // Symbol size:
-#define BITS_PER_SYMBOL 4
+#ifndef BITS_PER_SYMBOL
+  #define BITS_PER_SYMBOL 4
+#endif
 
 // Codeword length (info + check part).  If not defined, the maximum length of
 //  2 ^ BITS_PER_SYMBOL - 1
@@ -18,7 +20,9 @@
 // #define SYMBOLS_PER_CODEWORD 12		// custom value
 
 // Number of redundant check symbols per codeword (min: 1):
-#define CHECK_SYMBOLS_PER_CODEWORD 4
+#ifndef CHECK_SYMBOLS_PER_CODEWORD
+  #define CHECK_SYMBOLS_PER_CODEWORD 4
+#endif
 
 
 

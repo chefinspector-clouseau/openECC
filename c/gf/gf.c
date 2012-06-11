@@ -19,6 +19,27 @@ gfVec gfE2V[GF_N];
 gfExp gfV2E[GF_N];
 
 // -----------------------------------------------------------------------------
+// printf debugging:
+// -----------------------------------------------------------------------------
+void printPol(
+	char* name,		// printed as prefix
+	gfExp* p,		// polynomial
+	int n)			// degree (-> prints n+1 coeffs)
+// -----------------------------------------------------------------------------
+{
+	printf("%s[%3d] = { ", name, n);
+	for (int i=n; i>=0; i--) {
+		printf("%3d ", p[i]);
+	}
+	printf("}\n");
+}
+
+#ifndef DEBUG_GF		// disable debug output for this file
+  #define printf
+  #define printPol
+#endif
+
+// -----------------------------------------------------------------------------
 // initialize LUTs gfExp <-> gfVec
 // -----------------------------------------------------------------------------
 int gfInit()
@@ -81,9 +102,9 @@ int gfPolAdd(
 	gfExp*	S)	// sum; deg(S) is returned
 // -----------------------------------------------------------------------------
 {
-	dprintf("---------- polAdd\n");
-	PRINTPOL("add: A", A, nA);
-	PRINTPOL("add: B", B, nB);
+	printf("---------- polAdd\n");
+	printPol("add: A", A, nA);
+	printPol("add: B", B, nB);
 
 	// first sort A, B acc. to their length:
 	gfExp* P1;	int nP1;			// shorter
@@ -107,7 +128,7 @@ int gfPolAdd(
 		if (S[i] != GF_0)
 			nS = i;
 	}
-	PRINTPOL("add: S", S, nS);
+	printPol("add: S", S, nS);
 	return nS;
 }
 #define polSub polAdd	// true for char(GF) == 2
@@ -137,16 +158,16 @@ int gfPolMul(
 	gfExp*	C)	// out: product; deg(C) = nA + nB is returned
 // -----------------------------------------------------------------------------
 {
-	dprintf("---------- polMul\n");
-	PRINTPOL("mul: A", A, nA);
-	PRINTPOL("mul: B", B, nB);
+	printf("---------- polMul\n");
+	printPol("mul: A", A, nA);
+	printPol("mul: B", B, nB);
 	// OPT: omit this if caller knows actual degrees of A, B
 	int nC = nA + nB;
   #ifdef DEBUG
 	if (nA != gfPolDeg(A, nA))
-		dprintf("ERROR: gfPolMul: wrong degree (A): %d !!\n", nA);
+		printf("ERROR: gfPolMul: wrong degree (A): %d !!\n", nA);
 	if (nB != gfPolDeg(B, nB))
-		dprintf("ERROR: gfPolMul: wrong degree (B): %d !!\n", nB);
+		printf("ERROR: gfPolMul: wrong degree (B): %d !!\n", nB);
   #endif
 	for (int i=nC; i>=0; i--)
 		C[i] = GF_0;
@@ -160,7 +181,7 @@ int gfPolMul(
 		}
 	}
 done:
-	PRINTPOL("mul: C", C, nC);
+	printPol("mul: C", C, nC);
 	return nC;
 //  OPT: alternative impl. may be faster by saving some e2v conversions)
 // 	!! NOT READY YET !!
@@ -208,9 +229,9 @@ int gfPolDiv1(
 	gfExp*	R)	// out: remainder, has to be allocated from -1 .. nB-1 !!
 // -----------------------------------------------------------------------------
 {
-	dprintf("---------- polDiv1\n");
-	PRINTPOL("div: A", A, nA);
-	PRINTPOL("div: B", B, nB);
+	printf("---------- polDiv1\n");
+	printPol("div: A", A, nA);
+	printPol("div: B", B, nB);
 
 	// remainder is more efficient in vector representation:
 	gfVec* Rv = R;
@@ -236,7 +257,7 @@ int gfPolDiv1(
 	// convert result back to exponent representation:
 	gfPolV2E(Rv, R, nB-1);
 
-	PRINTPOL("div: R", R, nB-1);
+	printPol("div: R", R, nB-1);
 	return nB;
 }
 
@@ -260,8 +281,8 @@ gfExp gfPolEval(
 		gfExp a = A[i];
 		r = gfAdd(r, a);
 	}
-	PRINTPOL("evl: A", A, nA);
-	dprintf("A(%d)=%d\n", x, r);
+	printPol("evl: A", A, nA);
+	printf("A(%d)=%d\n", x, r);
 	return r;
 }
 
@@ -290,8 +311,8 @@ void gfPolEvalSeq(
 	gfExp	x)	// 1st location
 // -----------------------------------------------------------------------------
 {
-	dprintf("---------- polEvalSeq\n");
-	PRINTPOL("seq: A", A, nA);
+	printf("---------- polEvalSeq\n");
+	printPol("seq: A", A, nA);
 	// initialize all Yv with a0:
 	gfVec a0 = gfE2V[A[0]];
 	for (int iy=nY; iy>=0; iy--) {
@@ -315,7 +336,7 @@ void gfPolEvalSeq(
 next_a:
 		xi = gfMul11(xi, x);					// xi = x^ia
 	}
-	PRINTPOL("seq: Yv", Yv, nY);
+	printPol("seq: Yv", Yv, nY);
 }
 
 
@@ -354,10 +375,10 @@ gfExp* gfPolDivEEA(
 	int		nQ)	// in: max. deg(Q) (steps - 1)
 // -----------------------------------------------------------------------------
 {
-	dprintf("---------- polDivEEA\n");
-	PRINTPOL("div: A", A, nA);
-	PRINTPOL("div: B", B, nB);
-	dprintf("div: nQ = %d\n", nQ);
+	printf("---------- polDivEEA\n");
+	printPol("div: A", A, nA);
+	printPol("div: B", B, nB);
+	printf("div: nQ = %d\n", nQ);
 
 	// OPT: use *(R--), *(Q--) etc. where meaningful
 	gfExp b = B[nB];
@@ -367,7 +388,7 @@ gfExp* gfPolDivEEA(
 	gfPolE2V(R, Rv, nB);			// convert to vector format
 	*nR = nB;					// to be reduced with each step
 	for (int iq = nQ; iq>=0; iq--) {	// nQ + 1 steps
-		PRINTPOL("di1: Rv", Rv, *nR);
+		printPol("di1: Rv", Rv, *nR);
 		gfExp r = gfV2E[Rv[*nR]];
 		(*nR)--;
 		if (r == GF_0) {
@@ -386,8 +407,8 @@ gfExp* gfPolDivEEA(
 	// convert result back to exponent representation:
 	gfPolV2E(Rv, R, *nR);
 
-	PRINTPOL("div: R", R, *nR);
-	PRINTPOL("div: Q", Q, nQ);
+	printPol("div: R", R, *nR);
+	printPol("div: Q", Q, nQ);
 
 	return R;
 }
@@ -413,10 +434,10 @@ void gfPolEEA(
 	gfExp*	M)	// free memory of size: 7 * (nN+1) + 3
 // -----------------------------------------------------------------------------
 {
-	dprintf("---------- polEEA\n");
-	PRINTPOL("EEA: N", N, nN);
-	PRINTPOL("EEA: A", A, nA);
-	dprintf("EEA: nQ=%d\n", *nQ);
+	printf("---------- polEEA\n");
+	printPol("EEA: N", N, nN);
+	printPol("EEA: A", A, nA);
+	printf("EEA: nQ=%d\n", *nQ);
 	// -------------------- init: --------------------
 	// internal vars use external memory array:
 	// OPT: merge vars where possible (e.g. use C/D as TQ/R (?))
@@ -449,12 +470,12 @@ void gfPolEEA(
 	// -------------------- loop: --------------------
 	nTQ = *nQ;
 	while (1) {					// while (R1 != 0)
-		PRINTPOL("EEA1: R2", R2, nR2);
-		PRINTPOL("EEA1: R1", R1, nR1);
+		printPol("EEA1: R2", R2, nR2);
+		printPol("EEA1: R1", R1, nR1);
 
 		R2 = gfPolDivEEA(R2, nR2, &nR2, R1, nR1, TQ, nTQ);	// R = R2 % R1
 
-		PRINTPOL("EEA2: R2", R2, nR2);
+		printPol("EEA2: R2", R2, nR2);
 
 		nD = gfPolMul(D1, nD1, TQ, nTQ, D);		// D = D1 * TQ
 		nD = gfPolAdd(D, nD, D2, nD2, D);			// D += D2
@@ -469,8 +490,8 @@ void gfPolEEA(
 		C2 = C1;	nC2 = nC1;
 		C1 = C;		nC1 = nC;
 		C = t;
-		PRINTPOL("EEA: C", C1, nC1);
-		PRINTPOL("EEA: D", D1, nD1);
+		printPol("EEA: C", C1, nC1);
+		printPol("EEA: D", D1, nD1);
 
 		// R = R2 % R1 (at this time R is already stored in R2)
 		// adapt degrees of R, TQ; done if (R=0):
@@ -480,8 +501,8 @@ void gfPolEEA(
 			nR2--;
 			nTQ++;	// deg(R1')-- => deg(TQ) = deg(R2' / R1')++
 		}
-		dprintf("1 - nTQ=%d\n", nTQ);
-		dprintf("1 - nR=%d\n", nR2);
+		printf("1 - nTQ=%d\n", nTQ);
+		printf("1 - nR=%d\n", nR2);
 		if (nR2 < 0)	// R = 0 -> finished
 			break;
 
@@ -501,8 +522,8 @@ void gfPolEEA(
 		for (int i=nD1; i>=0; i--)
 			Q[i] = D1[i];
 	}
-	PRINTPOL("EEA: P", P, *nP);
-	PRINTPOL("EEA: Q", Q, *nQ);
+	printPol("EEA: P", P, *nP);
+	printPol("EEA: Q", Q, *nQ);
 }
 
 
@@ -536,8 +557,7 @@ gfExp gfPolEvalDeriv(
 		gfExp a = A[i];
 		r = gfAdd(r, a);
 	}
-	PRINTPOL("evl: A", A, nA);
-	dprintf("A'(%d)=%d\n", x, r);
+	printPol("evl: A", A, nA);
+	printf("A'(%d)=%d\n", x, r);
 	return r;
 }
-
