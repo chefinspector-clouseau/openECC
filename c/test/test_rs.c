@@ -67,7 +67,9 @@ int rsTest(
 	printPol("RS: EV", EV, RS_N - 1);
 
 	// ---------- add error: ----------
-	gfPolAdd(C, RS_N - 1, EV, RS_N - 1, C2);
+	// simple add (xor) -> do not use gfPolAdd(), it uses gfExp types
+	for (int i=0; i<RS_N; i++)
+		C2[i] = C[i] ^ EV[i];
 	printPol("RS: C2", C2, RS_N - 1);
 	for (int i=0; i<nDec; i++) {			// speed test
 		// restore erroneous code word (should not be part of the speed test but
