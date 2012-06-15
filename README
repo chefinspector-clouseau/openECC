@@ -1,13 +1,21 @@
 Here I share implementations of Error Correction Codes (ECCs) (well, only one so
 far) I am working on with some passion.
 
-As of 2012-03-19, it contains:
+Currently it contains:
 
-- Generic Reed-Solomon codec
-  Implemented in C, using the Euclidian algorithm for decoding.  As usual, it
-  claims to be *super* fast and *extremely* small, but I'll add some real data
-  here one day.
+- Generic, very fast Reed-Solomon codec in C:
 
-BCH and others may follow, maybe even some VHDL versions.
+  o 2 to 3x faster than the RS-codec of the Linux kernel (as of 3.2.6).  Corner
+    cases could gain up to 90x.  Not (yet) offering the same flexibility,
+    though.  The speed gain only partially results from this codec's static
+    configuration (the Linux codec uses dynamic configuration).  See the
+    benchmark branches for details.
+
+  o Uses the Euclidean algorithm for decoding, as described in an awesome book
+    about finite fields by Hans Kurzweil (D).
+
+
+BCH or other codecs may follow one day, VHDL versions will be added the day
+after...
 
 The source code is licensed under the GNU General Public License (V2).
