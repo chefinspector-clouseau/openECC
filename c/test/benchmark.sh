@@ -13,7 +13,7 @@ benchmark() {
 	nErrs=$1	; shift
 	nEnc=$1		; shift
 	nDec=$1		; shift
-	makecmd="make CODEC=$codec GF_NLOG=$bits RS_N=$n RS_N_K=$n_k"
+	makecmd="make CODEC=$codec"
 	# only recompile if required:
 	if [[ $makecmd != $MAKECMD ]]; then
 		make clean > /dev/null
@@ -21,7 +21,7 @@ benchmark() {
 		MAKECMD=$makecmd
 	fi
 	status=
-	t=$($time -f '%U' ./test_rs 1 $nErrs $SEED $nEnc $nDec 2>&1) || \
+	t=$($time -f '%U' ./test_rs $bits $n $n_k 1 $nErrs $SEED $nEnc $nDec 2>&1) || \
 		{ t=99.99; status=FAILED; }
 	if (( $nEnc > 1 )); then
 		mode=enc
