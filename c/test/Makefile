@@ -2,6 +2,8 @@
 
 CFLAGS = -std=c99 -O3
 
+MAKEFLAGS += -r --no-print-directory
+
 # symbol size in bits:
 ifneq ($(GF_NLOG),)
   DEFS += -DGF_NLOG=$(GF_NLOG)
