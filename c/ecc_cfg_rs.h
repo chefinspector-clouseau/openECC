@@ -9,38 +9,27 @@
 // user params:
 // -----------------------------------------------------------------------------
 
-// Symbol size:
-#ifndef BITS_PER_SYMBOL
-  #define BITS_PER_SYMBOL 4
+// Symbol size in bits:
+#ifndef GF_NLOG
+  #define GF_NLOG 4
 #endif
 
-// Codeword length (info + check part).  If not defined, the maximum length of
-//  2 ^ BITS_PER_SYMBOL - 1
+#define GF_N (1 << (GF_NLOG))
+
+// Codeword length (info + check part) in symbols.  If not defined, the maximum
+// length of
+//    GF_N - 1
 // is used.
-// #define SYMBOLS_PER_CODEWORD 12		// custom value
+#ifndef RS_N
+ #define RS_N (GF_N - 1)
+#endif
 
 // Number of redundant check symbols per codeword (min: 1):
-#ifndef CHECK_SYMBOLS_PER_CODEWORD
-  #define CHECK_SYMBOLS_PER_CODEWORD 4
+#ifndef RS_N_K			// N-K
+  #define RS_N_K 4
 #endif
 
 
-
-
-
-// -----------------------------------------------------------------------------
-// derived params:
-// -----------------------------------------------------------------------------
-
-#define GF_N (1 << (BITS_PER_SYMBOL))
-
-#ifndef SYMBOLS_PER_CODEWORD
- #define SYMBOLS_PER_CODEWORD (GF_N - 1)
-#endif
-
-// shortcuts:
-#define RS_N (SYMBOLS_PER_CODEWORD)
-#define RS_N_K (CHECK_SYMBOLS_PER_CODEWORD)
 #define RS_K (RS_N - RS_N_K)
 
 // sanity checks:

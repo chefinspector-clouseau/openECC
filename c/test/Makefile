@@ -3,13 +3,18 @@
 CFLAGS = -std=c99 -O3
 
 # symbol size in bits:
-ifneq ($(BITS_PER_SYMBOL),)
-  DEFS += -DBITS_PER_SYMBOL=$(BITS_PER_SYMBOL)
+ifneq ($(GF_NLOG),)
+  DEFS += -DGF_NLOG=$(GF_NLOG)
+endif
+
+# number of symbols per codeword (n):
+ifneq ($(RS_N),)
+  DEFS += -DRS_N=$(RS_N)
 endif
 
 # number of symbols to add (redundancy n-k):
-ifneq ($(CHECK_SYMBOLS_PER_CODEWORD),)
-  DEFS += -DCHECK_SYMBOLS_PER_CODEWORD=$(CHECK_SYMBOLS_PER_CODEWORD)
+ifneq ($(RS_N_K),)
+  DEFS += -DRS_N_K=$(RS_N_K)
 endif
 
 # enable debug output in core GF functions:
