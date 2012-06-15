@@ -20,14 +20,18 @@
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 
+int RS_N;
+int RS_N_K;
+int RS_K;
+
 // Generator polynomial (aka D(X)).  It has n-k roots at the consecutive
 // locations z^1 ... z^(n-k) (narrow-sense BCH code).
-static gfExp rsGen[RS_N_K + 1];
+static gfExp rsGen[RS_N_K_MAX + 1];
 
 // Super polynomial N(X) = X^m - 1 (m = GF_N-1).  It has roots at all z^i,
 // i=0..m-1.  In GF(16): N(X) = X^15 - 1 = prod(X-z^i) for i = 0..14.  We save
 // only the highest n-k coefficients.
-static gfExp rsSup[RS_N_K];
+static gfExp rsSup[RS_N_K_MAX];
 
 // Compute generator polynomial and super polynomial
 // (may instead be done at compile time):
@@ -35,12 +39,19 @@ static gfExp rsSup[RS_N_K];
 // rsSup(X) = prod(X - z^i) for i = 0 ... m-1
 //          = X^m - 1
 // -----------------------------------------------------------------------------
-void rsInit()
+void rsInit(
+	int gf_nlog,		// bits per symbol -> GF(2^n)
+	int n,			// # of symbols per code word (incl. check symbols)
+	int n_k)		// # of check symbols per code word
 // -----------------------------------------------------------------------------
 {
 	printf("---------- rsInit\n");
 
-	gfInit();
+	gfInit(gf_nlog);
+
+	RS_N   = n;
+	RS_N_K = n_k;
+	RS_K   = n - n_k;
 
 	// ---------- compute rsSup = X^m - 1 (only upper n-k coeffs)
 	rsSup[RS_N_K - 1] = GF_1;
@@ -113,15 +124,15 @@ void rsDecode(
 {
 	printf("---------- rsDecode\n");
 	printPol("dec: C", C, RS_N - 1);
-	static gfVec Sv[RS_N_K];	// syndrome in vector representation
+	static gfVec Sv[RS_N_K_MAX];	// syndrome in vector representation
 	// calculate syndrome using the DFT:
 	gfPolEvalSeq(C, RS_N - 1, Sv, RS_N_K - 1, GF_Z(1));
 	printPol("dec: Sv", Sv, RS_N_K - 1);
-	#define MSIZE1 (7 * (RS_N_K + 1) + 3)	// for the EEA
-	#define MSIZE2 (RS_K)					// to evaluate Q(X) at K locations
+	#define MSIZE1 (7 * (RS_N_K_MAX + 1) + 3)	// for the EEA
+	#define MSIZE2 (RS_K_MAX)					// to evaluate Q(X) at K locations
 	static gfExp M[MAX(MSIZE1, MSIZE2)];	// memory
-	static gfExp P[RS_N];	int nP;	// OPT: determine better limits for deg(P), deg(Q)
-	static gfExp Q[RS_N];	int nQ;
+	static gfExp P[RS_N_MAX];	int nP;	// OPT: determine better limits for deg(P), deg(Q)
+	static gfExp Q[RS_N_MAX];	int nQ;
 	int nS = gfPolDeg(Sv, RS_N_K - 1);
 	// If the syndrome is 0, we're done.  Else start the EEA:
 	if (nS >= 0) {					// S != 0

@@ -27,14 +27,14 @@ int rsTest(
 	int nDec)	// decode # times
 // -----------------------------------------------------------------------------
 {
-	static gfExp C[RS_N];		// code word
+	static gfExp C[RS_N_MAX];	// code word
 	gfExp* A = C + RS_N_K;		// encoder needs A[-1] .. A[-(n-k)]
 
-	static gfExp R_[RS_N_K + 1];// n-k check symbols (+1)
+	static gfExp R_[RS_N_K_MAX + 1];// n-k check symbols (+1)
 	gfExp* R = R_ + 1;			// encoder needs R[-1]
 
-	static gfExp C2[RS_N];		// code word with errors
-	static gfExp C3[RS_N];		// code word with errors, used in loop
+	static gfExp C2[RS_N_MAX];	// code word with errors
+	static gfExp C3[RS_N_MAX];	// code word with errors, used in loop
 
 	printf("RS: --------------------\n");
 
@@ -51,7 +51,7 @@ int rsTest(
 	printPol("RS:  C", C, RS_N - 1);
 
 	// ---------- pick error: ----------
-	static gfExp EV[RS_N];		// error vector
+	static gfExp EV[RS_N_MAX];		// error vector
 	for (int i=0; i<RS_N; i++)
 		EV[i] = GF_0;
 	printf("RS: nErrs = %d\n", nErrs);
@@ -100,20 +100,29 @@ int main(int argc, char *argv[])
 	// arg parsing:
 	argc--; argv++;
 	// defaults:
-	int nRuns = 1;			// # of test runs
-	int nErrs = RS_N_K/2;	// # of errors to inject (-1 for random [0..max])
-	int seed  = 1;			// random seed
-	int nEnc  = 1;			// encode # times (speed test)
-	int nDec  = 1;			// decode # times (speed test)
-	if (argc-- > 0) nRuns = atoi(*(argv++));
-	if (argc-- > 0) nErrs = atoi(*(argv++));
-	if (argc-- > 0) seed  = atoi(*(argv++));
-	if (argc-- > 0) nEnc  = atoi(*(argv++));
-	if (argc-- > 0) nDec  = atoi(*(argv++));
+	int gf_nlog = 8;			// # of bits per symbol
+	int rs_n    = -1;			// # of symbols per code word
+	int rs_n_k  = 4;			// # of check symbols per code word
+	int nRuns   = 1;			// # of test runs
+	int nErrs   = RS_N_K/2;		// # of errors to inject (-1 for random [0..max])
+	int seed    = 1;			// random seed
+	int nEnc    = 1;			// encode # times (speed test)
+	int nDec    = 1;			// decode # times (speed test)
+	if (argc-- > 0) gf_nlog = atoi(*(argv++));
+	if (argc-- > 0) rs_n    = atoi(*(argv++));
+	if (argc-- > 0) rs_n_k  = atoi(*(argv++));
+	if (argc-- > 0) nRuns   = atoi(*(argv++));
+	if (argc-- > 0) nErrs   = atoi(*(argv++));
+	if (argc-- > 0) seed    = atoi(*(argv++));
+	if (argc-- > 0) nEnc    = atoi(*(argv++));
+	if (argc-- > 0) nDec    = atoi(*(argv++));
+
+	if (rs_n == -1)
+		rs_n = (1 << gf_nlog) - 1;
 
 	randSetSeed(seed);
 
-	rsInit();
+	rsInit(gf_nlog, rs_n, rs_n_k);
 
 	for (int run = 0; run < nRuns; run++) {
 		int nErrs2;

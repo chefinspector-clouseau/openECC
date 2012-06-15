@@ -16,10 +16,7 @@
 #include <ecc_cfg.h>	// needed for GF_N = 2^n (field size)
 #include <stdio.h>		// for printf debugging
 
-#ifndef GF_N
-  #warning "Unspecified field size, using default: 16."
-  #define GF_N 16
-#endif
+extern int GF_N;
 
 // Elements of our GF(2^n) are represented in two different formats, depending
 // on the context:
@@ -57,8 +54,8 @@
 typedef gfExp gfVec;		// vector representation
 
 // lookup tables to convert between both representations:
-extern gfVec gfE2V[GF_N];	// z^i -> vector
-extern gfExp gfV2E[GF_N];	// vector -> z^i
+extern gfVec gfE2V[GF_N_MAX];	// z^i -> vector
+extern gfExp gfV2E[GF_N_MAX];	// vector -> z^i
 // extern gfExp zechLog[GF_N];	// was used by gfAdd() but turned out to be slower
 
 
@@ -216,10 +213,11 @@ inline gfExp gfAdd(gfExp a, gfExp b)
 #define gfSub gfAdd	// true for char(GF) == 2
 
 
-// -----------------------------------------------------------------------------
 // initialize LUTs gfExp <-> gfVec
 // -----------------------------------------------------------------------------
-int gfInit();
+void gfInit(
+	int nlog);	// bits per symbol -> GF(2^nlog)
+// -----------------------------------------------------------------------------
 
 
 // =============================================================================

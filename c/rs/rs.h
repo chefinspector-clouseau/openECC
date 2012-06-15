@@ -16,13 +16,21 @@
 #include <ecc_cfg.h>
 #include <gf/gf.h>
 
+extern int RS_N;
+extern int RS_N_K;
+extern int RS_K;
+
 // Compute generator polynomial and super polynomial
 // (may instead be done at compile time):
 // rsGen(X) = prod(X - z^i) for i = 1 ... n-k  (aka D(X))
 // rsSup(X) = prod(X - z^i) for i = 0 ... m-1  (aka N(X))
 //          = X^m - 1
 // -----------------------------------------------------------------------------
-void rsInit();
+void rsInit(
+	int gf_n,		// bits per symbol -> GF(2^n)
+	int n,			// # of symbols per code word (incl. check symbols)
+	int n_k);		// # of check symbols per code word
+// -----------------------------------------------------------------------------
 
 
 // Compute check symbols from information symbols.
