@@ -62,8 +62,6 @@ int rs_init(struct rs_control *rs, int symsize, int gfpoly, int (*gffunc)(int),
 	if (rs == NULL)
 		return -1;
 
-	rs->mm = symsize;
-	rs->nn = (1 << symsize) - 1;
 	rs->fcr = fcr;
 	rs->prim = prim;
 	rs->nroots = nroots;
@@ -71,21 +69,21 @@ int rs_init(struct rs_control *rs, int symsize, int gfpoly, int (*gffunc)(int),
 	rs->gffunc = gffunc;
 
 	/* Generate Galois field lookup tables */
-	rs->index_of[0] = rs->nn;	/* log(zero) = -inf */
-	rs->alpha_to[rs->nn] = 0;	/* alpha**-inf = 0 */
+	rs->index_of[0] = (GF_N - 1);	/* log(zero) = -inf */
+	rs->alpha_to[(GF_N - 1)] = 0;	/* alpha**-inf = 0 */
 	if (gfpoly) {
 		sr = 1;
-		for (i = 0; i < rs->nn; i++) {
+		for (i = 0; i < (GF_N - 1); i++) {
 			rs->index_of[sr] = i;
 			rs->alpha_to[i] = sr;
 			sr <<= 1;
 			if (sr & (1 << symsize))
 				sr ^= gfpoly;
-			sr &= rs->nn;
+			sr &= (GF_N - 1);
 		}
 	} else {
 		sr = gffunc(0);
-		for (i = 0; i < rs->nn; i++) {
+		for (i = 0; i < (GF_N - 1); i++) {
 			rs->index_of[sr] = i;
 			rs->alpha_to[i] = sr;
 			sr = gffunc(sr);
@@ -96,7 +94,7 @@ int rs_init(struct rs_control *rs, int symsize, int gfpoly, int (*gffunc)(int),
 		goto errpol;
 
 	/* Find prim-th root of 1, used in decoding */
-	for(iprim = 1; (iprim % prim) != 0; iprim += rs->nn);
+	for(iprim = 1; (iprim % prim) != 0; iprim += (GF_N - 1));
 	/* prim-th root of 1, index form */
 	rs->iprim = iprim / prim;
 

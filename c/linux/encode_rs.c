@@ -19,13 +19,13 @@
  */
 {
 	int i, j, pad;
-	int nn = rs->nn;
+	int nn = (GF_N - 1);
 	int nroots = rs->nroots;
 	uint16_t *alpha_to = rs->alpha_to;
 	uint16_t *index_of = rs->index_of;
 	uint16_t *genpoly = rs->genpoly;
 	uint16_t fb;
-	uint16_t msk = (uint16_t) rs->nn;
+	uint16_t msk = (uint16_t) (GF_N - 1);
 
 	/* Check length parameter for validity */
 	pad = nn - nroots - len;

@@ -19,6 +19,8 @@
 #ifndef _RSLIB_H_
 #define _RSLIB_H_
 
+#include <ecc_cfg.h>	// GF_N, RS_N, RS_K, RS_N_K
+
 // hacks to compile standalone:
 typedef unsigned short uint16_t;
 typedef unsigned char uint8_t;
@@ -94,17 +96,17 @@ void free_rs(struct rs_control *rs);
  *  @x:		the value to reduce
  *
  *  where
- *  rs->mm = number of bits per symbol
- *  rs->nn = (2^rs->mm) - 1
+ *  GF_NLOG = number of bits per symbol
+ *  (GF_N - 1) = (2^GF_NLOG) - 1
  *
  *  Simple arithmetic modulo would return a wrong result for values
- *  >= 3 * rs->nn
+ *  >= 3 * (GF_N - 1)
 */
 static inline int rs_modnn(struct rs_control *rs, int x)
 {
-	while (x >= rs->nn) {
-		x -= rs->nn;
-		x = (x >> rs->mm) + (x & rs->nn);
+	while (x >= (GF_N - 1)) {
+		x -= (GF_N - 1);
+		x = (x >> GF_NLOG) + (x & (GF_N - 1));
 	}
 	return x;
 }

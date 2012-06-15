@@ -6,116 +6,116 @@ errs: # of errors introduced by the test bench
 mode m     n  n-k errs      codec       time    factor
 ------------------------------------------------------------
 dec  8   100    2    0       mine       0.72 
-dec  8   100    2    0      linux       1.69  x 2.34722
+dec  8   100    2    0      linux       1.20  x 1.66667
 dec  8   100    2    1       mine       1.31 
-dec  8   100    2    1      linux       4.11  x 3.1374
+dec  8   100    2    1      linux       2.93  x 2.23664
 dec  8   100   64    0       mine       1.74 
-dec  8   100   64    0      linux       4.62  x 2.65517
+dec  8   100   64    0      linux       3.19  x 1.83333
 dec  8   100   64   32       mine       0.97 
-dec  8   100   64   32      linux       2.96  x 3.05155
+dec  8   100   64   32      linux       2.84  x 2.92784
 dec  8   255    2    0       mine       1.07 
-dec  8   255    2    0      linux       2.61  x 2.43925
+dec  8   255    2    0      linux       1.78  x 1.66355
 dec  8   255    2    1       mine       1.21 
-dec  8   255    2    1      linux       2.13  x 1.76033
+dec  8   255    2    1      linux       1.52  x 1.2562
 dec  8   255   16    0       mine       1.11 
-dec  8   255   16    0      linux       2.68  x 2.41441
+dec  8   255   16    0      linux       1.80  x 1.62162
 dec  8   255   16    8       mine       1.99 
-dec  8   255   16    8      linux       4.07  x 2.04523
+dec  8   255   16    8      linux       3.23  x 1.62312
 dec  8   255   32    0       mine       1.08 
-dec  8   255   32    0      linux       2.72  x 2.51852
+dec  8   255   32    0      linux       1.85  x 1.71296
 dec  8   255   32   16       mine       2.05 
-dec  8   255   32   16      linux       4.52  x 2.20488
+dec  8   255   32   16      linux       3.79  x 1.84878
 dec  8   255   64    0       mine       0.88 
-dec  8   255   64    0      linux       2.37  x 2.69318
+dec  8   255   64    0      linux       1.66  x 1.88636
 dec  8   255   64   32       mine       1.86 
-dec  8   255   64   32      linux       4.38  x 2.35484
+dec  8   255   64   32      linux       3.84  x 2.06452
 dec  8   255  128    0       mine       0.92 
-dec  8   255  128    0      linux       2.85  x 3.09783
+dec  8   255  128    0      linux       2.13  x 2.31522
 dec  8   255  128   64       mine       2.23 
-dec  8   255  128   64      linux       6.11  x 2.73991
+dec  8   255  128   64      linux       5.76  x 2.58296
 dec  8   255  200    0       mine       1.42 
-dec  8   255  200    0      linux       4.76  x 3.35211
+dec  8   255  200    0      linux       3.73  x 2.62676
 dec  8   255  200  100       mine       3.75 
-dec  8   255  200  100      linux      11.83  x 3.15467
+dec  8   255  200  100      linux      11.57  x 3.08533
 dec 12   100    2    0       mine       0.72 
-dec 12   100    2    0      linux       1.70  x 2.36111
+dec 12   100    2    0      linux       1.18  x 1.63889
 dec 12   100    2    1       mine       0.12 
-dec 12   100    2    1      linux       4.33  x 36.0833
+dec 12   100    2    1      linux       2.96  x 24.6667
 dec 12   256   64    0       mine       1.32 
-dec 12   256   64    0      linux       2.82  x 2.13636
+dec 12   256   64    0      linux       1.70  x 1.28788
 dec 12   256   64   32       mine       1.89 
-dec 12   256   64   32      linux      14.12  x 7.4709
+dec 12   256   64   32      linux      13.52  x 7.15344
 dec 12  1024  256    0       mine       1.47 
-dec 12  1024  256    0      linux       3.14  x 2.13605
+dec 12  1024  256    0      linux       1.93  x 1.31293
 dec 12  1024  256  128       mine       2.97 
-dec 12  1024  256  128      linux       9.06  x 3.05051
+dec 12  1024  256  128      linux       6.71  x 2.25926
 dec 12  4095    2    0       mine       0.60 
-dec 12  4095    2    0      linux       1.37  x 2.28333
+dec 12  4095    2    0      linux       0.93  x 1.55
 dec 12  4095    2    1       mine       0.96 
-dec 12  4095    2    1      linux       1.38  x 1.4375
+dec 12  4095    2    1      linux       0.95  x 0.989583
 dec 12  4095   64    0       mine       1.42 
-dec 12  4095   64    0      linux       3.02  x 2.12676
+dec 12  4095   64    0      linux       1.83  x 1.28873
 dec 12  4095   64   32       mine       1.11 
-dec 12  4095   64   32      linux       2.11  x 1.9009
+dec 12  4095   64   32      linux       1.52  x 1.36937
 dec 12  4095  256    0       mine       1.47 
-dec 12  4095  256    0      linux       3.15  x 2.14286
+dec 12  4095  256    0      linux       1.94  x 1.31973
 dec 12  4095  256  128       mine       2.42 
-dec 12  4095  256  128      linux       4.63  x 1.91322
+dec 12  4095  256  128      linux       3.12  x 1.28926
 dec 12  4095 1024    0       mine       5.94 
-dec 12  4095 1024    0      linux      15.10  x 2.54209
+dec 12  4095 1024    0      linux      10.32  x 1.73737
 dec 12  4095 1024  512       mine      12.04 
-dec 12  4095 1024  512      linux      26.57  x 2.20681
+dec 12  4095 1024  512      linux      21.91  x 1.81977
 dec 12  4095 2048    0       mine      11.95 
-dec 12  4095 2048    0      linux      35.87  x 3.00167
+dec 12  4095 2048    0      linux      26.56  x 2.22259
 dec 12  4095 2048 1024       mine      29.36 
-dec 12  4095 2048 1024      linux      74.50  x 2.53747
+dec 12  4095 2048 1024      linux      67.95  x 2.31437
 dec 16   256   64    0       mine       0.92 
-dec 16   256   64    0      linux       2.54  x 2.76087
+dec 16   256   64    0      linux       1.74  x 1.8913
 dec 16   256   64   32       mine       0.47 
-dec 16   256   64   32      linux      42.35  x 90.1064
+dec 16   256   64   32      linux      21.28  x 45.2766
 dec 16 65535    2    0       mine       0.54 
-dec 16 65535    2    0      linux       1.44  x 2.66667
+dec 16 65535    2    0      linux       1.22  x 2.25926
 dec 16 65535    2    1       mine       0.95 
-dec 16 65535    2    1      linux       1.46  x 1.53684
+dec 16 65535    2    1      linux       1.23  x 1.29474
 dec 16 65535 1024    0       mine      19.34 
-dec 16 65535 1024    0      linux      53.57  x 2.76991
+dec 16 65535 1024    0      linux      37.15  x 1.92089
 dec 16 65535 1024  512       mine      30.32 
-dec 16 65535 1024  512      linux      72.74  x 2.39908
+dec 16 65535 1024  512      linux      45.91  x 1.51418
 enc  8   100    2    0       mine       0.95 
-enc  8   100    2    0      linux       2.40  x 2.52632
+enc  8   100    2    0      linux       2.00  x 2.10526
 enc  8   100   64    0       mine       0.51 
-enc  8   100   64    0      linux       1.63  x 3.19608
+enc  8   100   64    0      linux       1.38  x 2.70588
 enc  8   255    2    0       mine       0.97 
-enc  8   255    2    0      linux       2.43  x 2.50515
+enc  8   255    2    0      linux       2.10  x 2.16495
 enc  8   255   16    0       mine       0.88 
-enc  8   255   16    0      linux       2.67  x 3.03409
+enc  8   255   16    0      linux       2.53  x 2.875
 enc  8   255   32    0       mine       0.78 
-enc  8   255   32    0      linux       2.20  x 2.82051
+enc  8   255   32    0      linux       1.97  x 2.52564
 enc  8   255   64    0       mine       1.05 
-enc  8   255   64    0      linux       3.05  x 2.90476
+enc  8   255   64    0      linux       2.73  x 2.6
 enc  8   255  128    0       mine       1.43 
-enc  8   255  128    0      linux       4.14  x 2.8951
+enc  8   255  128    0      linux       3.61  x 2.52448
 enc  8   255  200    0       mine       0.95 
-enc  8   255  200    0      linux       2.87  x 3.02105
+enc  8   255  200    0      linux       2.52  x 2.65263
 enc 12   100    2    0       mine       0.48 
-enc 12   100    2    0      linux       1.45  x 3.02083
+enc 12   100    2    0      linux       1.26  x 2.625
 enc 12   256   64    0       mine       1.06 
-enc 12   256   64    0      linux       3.15  x 2.9717
+enc 12   256   64    0      linux       2.82  x 2.66038
 enc 12  1024  256    0       mine       0.84 
-enc 12  1024  256    0      linux       2.54  x 3.02381
+enc 12  1024  256    0      linux       2.21  x 2.63095
 enc 12  4095    2    0       mine       1.28 
-enc 12  4095    2    0      linux       3.54  x 2.76562
+enc 12  4095    2    0      linux       3.16  x 2.46875
 enc 12  4095   64    0       mine       1.11 
-enc 12  4095   64    0      linux       3.50  x 3.15315
+enc 12  4095   64    0      linux       2.92  x 2.63063
 enc 12  4095  256    0       mine       1.05 
-enc 12  4095  256    0      linux       3.17  x 3.01905
+enc 12  4095  256    0      linux       2.76  x 2.62857
 enc 12  4095 1024    0       mine       3.33 
-enc 12  4095 1024    0      linux       9.96  x 2.99099
+enc 12  4095 1024    0      linux       8.66  x 2.6006
 enc 12  4095 2048    0       mine       4.45 
-enc 12  4095 2048    0      linux      12.95  x 2.91011
+enc 12  4095 2048    0      linux      11.12  x 2.49888
 enc 16   256   64    0       mine       1.04 
-enc 16   256   64    0      linux       2.83  x 2.72115
+enc 16   256   64    0      linux       2.41  x 2.31731
 enc 16 65535    2    0       mine       1.32 
-enc 16 65535    2    0      linux       1.96  x 1.48485
+enc 16 65535    2    0      linux       1.69  x 1.2803
 enc 16 65535 1024    0       mine      18.92 
-enc 16 65535 1024    0      linux      51.66  x 2.73044
+enc 16 65535 1024    0      linux      44.32  x 2.34249

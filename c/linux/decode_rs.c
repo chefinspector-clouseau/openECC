@@ -19,7 +19,7 @@
 {
 	int deg_lambda, el, deg_omega;
 	int i, j, r, k, pad;
-	int nn = rs->nn;
+	int nn = (GF_N - 1);
 	int nroots = rs->nroots;
 	int fcr = rs->fcr;
 	int prim = rs->prim;
@@ -35,7 +35,7 @@
 	uint16_t b[nroots + 1], t[nroots + 1], omega[nroots + 1];
 	uint16_t root[nroots], reg[nroots + 1], loc[nroots];
 	int count = 0;
-	uint16_t msk = (uint16_t) rs->nn;
+	uint16_t msk = (uint16_t) (GF_N - 1);
 
 	/* Check length parameter for validity */
 	pad = nn - nroots - len;
