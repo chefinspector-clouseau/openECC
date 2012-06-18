@@ -65,42 +65,42 @@ for codec in mine linux; do
 	benchmark $codec    8   255  200     0       1   10000
 	benchmark $codec    8   255  200   100       1   10000
 			       
-	# GF(2^12):	       
-	benchmark $codec   12  4095    2     0   30000       1
-	benchmark $codec   12  4095    2     0       1   20000
-	benchmark $codec   12  4095    2     1       1   20000
-	benchmark $codec   12   100    2     0  500000       1
-	benchmark $codec   12   100    2     0       1 1000000
-	benchmark $codec   12   100    2     1       1  100000
-	benchmark $codec   12  4095   64     0    2000       1
-	benchmark $codec   12  4095   64     0       1    2000
-	benchmark $codec   12  4095   64    32       1    1000
-	benchmark $codec   12   256   64     0   40000       1
-	benchmark $codec   12   256   64     0       1   30000
-	benchmark $codec   12   256   64    32       1   20000
-	benchmark $codec   12  4095  256     0     500       1
-	benchmark $codec   12  4095  256     0       1     500
-	benchmark $codec   12  4095  256   128       1     500
-	benchmark $codec   12  1024  256     0    2000       1
-	benchmark $codec   12  1024  256     0       1    2000
-	benchmark $codec   12  1024  256   128       1    2000
-	benchmark $codec   12  4095 1024     0     500       1
-	benchmark $codec   12  4095 1024     0       1     500
-	benchmark $codec   12  4095 1024   512       1     500
-	benchmark $codec   12  4095 2048     0     500       1
-	benchmark $codec   12  4095 2048     0       1     500
-	benchmark $codec   12  4095 2048  1024       1     500
+# 	# GF(2^12):	       
+# 	benchmark $codec   12  4095    2     0   30000       1
+# 	benchmark $codec   12  4095    2     0       1   20000
+# 	benchmark $codec   12  4095    2     1       1   20000
+# 	benchmark $codec   12   100    2     0  500000       1
+# 	benchmark $codec   12   100    2     0       1 1000000
+# 	benchmark $codec   12   100    2     1       1  100000
+# 	benchmark $codec   12  4095   64     0    2000       1
+# 	benchmark $codec   12  4095   64     0       1    2000
+# 	benchmark $codec   12  4095   64    32       1    1000
+# 	benchmark $codec   12   256   64     0   40000       1
+# 	benchmark $codec   12   256   64     0       1   30000
+# 	benchmark $codec   12   256   64    32       1   20000
+# 	benchmark $codec   12  4095  256     0     500       1
+# 	benchmark $codec   12  4095  256     0       1     500
+# 	benchmark $codec   12  4095  256   128       1     500
+# 	benchmark $codec   12  1024  256     0    2000       1
+# 	benchmark $codec   12  1024  256     0       1    2000
+# 	benchmark $codec   12  1024  256   128       1    2000
+# 	benchmark $codec   12  4095 1024     0     500       1
+# 	benchmark $codec   12  4095 1024     0       1     500
+# 	benchmark $codec   12  4095 1024   512       1     500
+# 	benchmark $codec   12  4095 2048     0     500       1
+# 	benchmark $codec   12  4095 2048     0       1     500
+# 	benchmark $codec   12  4095 2048  1024       1     500
 			       
-	# GF(2^16):	       
-	benchmark $codec   16 65535    2     0    1000       1
-	benchmark $codec   16 65535    2     0       1    1000
-	benchmark $codec   16 65535    2     1       1    1000
-	benchmark $codec   16 65535 1024     0     100       1
-	benchmark $codec   16 65535 1024     0       1     100
-	benchmark $codec   16 65535 1024   512       1     100
-	benchmark $codec   16   256   64     0   30000       1
-	benchmark $codec   16   256   64     0       1   20000
-	benchmark $codec   16   256   64    32       1    4000
+# 	# GF(2^16):	       
+# 	benchmark $codec   16 65535    2     0    1000       1
+# 	benchmark $codec   16 65535    2     0       1    1000
+# 	benchmark $codec   16 65535    2     1       1    1000
+# 	benchmark $codec   16 65535 1024     0     100       1
+# 	benchmark $codec   16 65535 1024     0       1     100
+# 	benchmark $codec   16 65535 1024   512       1     100
+# 	benchmark $codec   16   256   64     0   30000       1
+# 	benchmark $codec   16   256   64     0       1   20000
+# 	benchmark $codec   16   256   64    32       1    4000
 done | tee -a benchmark.log
 
 echo "--------------------------------------------------------------------------------"
